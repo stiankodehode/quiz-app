@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "quiz_app",
   "version": "0.1.0",
   "private": true,
@@ -45,6 +46,12 @@
 
     "homepage": "https://stiankodehode.github.io/quiz-app",
 
+=======
+    "name": "quiz_app",
+    "version": "0.1.0",
+    "private": true,
+    "homepage": "https://stiankodehode.github.io/quiz-app",
+>>>>>>> 49c7c25b99a66668754780d1c9d688a09139fc65
     "dependencies": {
         "@testing-library/jest-dom": "^5.16.5",
         "@testing-library/react": "^13.4.0",
@@ -60,11 +67,16 @@
     "scripts": {
         "start": "react-scripts start",
         "build": "react-scripts build",
+<<<<<<< HEAD
 <<<<<<< Updated upstream
         "predeploy": "npm run build",
         "deploy": "gh-pages -d build",
 =======
 >>>>>>> Stashed changes
+=======
+        "predeploy": "npm run build",
+        "deploy": "gh-pages -d build",
+>>>>>>> 49c7c25b99a66668754780d1c9d688a09139fc65
         "test": "react-scripts test",
         "eject": "react-scripts eject"
     },
@@ -85,6 +97,7 @@
             "last 1 firefox version",
             "last 1 safari version"
         ]
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     },
     "devDependencies": {
@@ -93,4 +106,10 @@
 >>>>>>> Stashed changes
     }
 >>>>>>> Stashed changes
+=======
+    },
+    "devDependencies": {
+        "gh-pages": "^4.0.0"
+    }
+>>>>>>> 49c7c25b99a66668754780d1c9d688a09139fc65
 }

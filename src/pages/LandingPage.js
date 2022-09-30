@@ -11,6 +11,7 @@ const LandingPage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [answers, setAnswers] = useState([]);
     const [questionAmount, setQuestionAmount] = useState(5);
+    const [restart, setRestart] = useState(true);
 
     // This function adds the most recent answer and question data to the end of the array.
     const updateAnswers = (question, answer, answersArray) => {
@@ -24,6 +25,15 @@ const LandingPage = () => {
         ]);
     };
 
+    // This function is used to flip a boolean to trigger a new API call
+    const flipBoolean = () => {
+        setRestart((oldValue) => !oldValue);
+    };
+    // This function sets the answers state back to an empty array
+    const resetAnswers = () => {
+        setAnswers([]);
+    };
+    // This function handles the amount of questions to be fetched from the API
     const handleQuestionAmount = (amount) => {
         setQuestionAmount(amount);
     };
@@ -38,7 +48,7 @@ const LandingPage = () => {
                 setQuizData(res.data.results);
                 setIsLoading(false);
             });
-    }, [questionAmount]);
+    }, [questionAmount, restart]);
 
     return (
         <>
@@ -68,6 +78,8 @@ const LandingPage = () => {
                     path="/pages/ResultsPage"
                     element={
                         <ResultsPage
+                            flipBoolean={flipBoolean}
+                            resetAnswers={resetAnswers}
                             questionAmount={questionAmount}
                             answers={answers}
                         />
