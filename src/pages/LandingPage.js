@@ -8,10 +8,55 @@ import { loadingIcon } from "../img/loading";
 
 const LandingPage = () => {
     const [quizData, setQuizData] = useState();
+    const [categoryData, setCategoryData] = useState();
     const [isLoading, setIsLoading] = useState(true);
     const [answers, setAnswers] = useState([]);
-    const [questionAmount, setQuestionAmount] = useState(5);
+    const [triviaForm, setTriviaForm] = useState({
+        questions: 5,
+        category: undefined,
+    });
     const [restart, setRestart] = useState(true);
+
+    // API call for categories
+    useEffect(() => {
+        axios.get("https://opentdb.com/api_category.php").then((res) => {
+            setCategoryData(res.data.trivia_categories);
+            setIsLoading(false);
+        });
+    }, []);
+
+    // API call
+
+    const questionsApiCall = () => {
+        console.log("api call");
+        const category = "&category=" + triviaForm.category;
+        console.log(category);
+        axios
+            .get(
+                `https://opentdb.com/api.php?amount=${triviaForm.questions}${
+                    triviaForm.category === undefined ? "" : category
+                }&encode=url3986`
+            )
+            .then((res) => {
+                setQuizData(res.data.results);
+                setIsLoading(false);
+            });
+    };
+
+    // useEffect(() => {
+    //     const category = "&category=" + triviaForm.category;
+    //     console.log(category);
+    //     axios
+    //         .get(
+    //             `https://opentdb.com/api.php?amount=${triviaForm.questions}${
+    //                 triviaForm.category === undefined ? "" : category
+    //             }&encode=url3986`
+    //         )
+    //         .then((res) => {
+    //             setQuizData(res.data.results);
+    //             setIsLoading(false);
+    //         });
+    // }, [triviaForm, restart]);
 
     // This function adds the most recent answer and question data to the end of the array.
     const updateAnswers = (question, answer, answersArray) => {
@@ -25,6 +70,14 @@ const LandingPage = () => {
         ]);
     };
 
+    const updateTriviaForm = (event) => {
+        const { name, value } = event.target;
+        setTriviaForm((oldState) => ({
+            ...oldState,
+            [name]: value,
+        }));
+    };
+
     // This function is used to flip a boolean to trigger a new API call
     const flipBoolean = () => {
         setRestart((oldValue) => !oldValue);
@@ -34,21 +87,6 @@ const LandingPage = () => {
         setAnswers([]);
     };
     // This function handles the amount of questions to be fetched from the API
-    const handleQuestionAmount = (amount) => {
-        setQuestionAmount(amount);
-    };
-
-    // API call
-    useEffect(() => {
-        axios
-            .get(
-                `https://opentdb.com/api.php?amount=${questionAmount}&encode=url3986`
-            )
-            .then((res) => {
-                setQuizData(res.data.results);
-                setIsLoading(false);
-            });
-    }, [questionAmount, restart]);
 
     return (
         <>
@@ -60,7 +98,9 @@ const LandingPage = () => {
                             <svg>{loadingIcon}</svg>
                         ) : (
                             <StartQuiz
-                                handleQuestionAmount={handleQuestionAmount}
+                                updateTriviaForm={updateTriviaForm}
+                                categoryData={categoryData}
+                                questionsApiCall={questionsApiCall}
                             />
                         )
                     }
@@ -68,10 +108,14 @@ const LandingPage = () => {
                 <Route
                     path="/pages/QuizPage"
                     element={
-                        <QuizPage
-                            quizData={quizData}
-                            updateAnswers={updateAnswers}
-                        />
+                        !quizData ? (
+                            <svg>{loadingIcon}</svg>
+                        ) : (
+                            <QuizPage
+                                quizData={quizData}
+                                updateAnswers={updateAnswers}
+                            />
+                        )
                     }
                 />
                 <Route
@@ -80,7 +124,7 @@ const LandingPage = () => {
                         <ResultsPage
                             flipBoolean={flipBoolean}
                             resetAnswers={resetAnswers}
-                            questionAmount={questionAmount}
+                            questionAmount={triviaForm.questions}
                             answers={answers}
                         />
                     }
